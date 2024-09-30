@@ -5,6 +5,8 @@ import 'package:home_services/Utils/constants/colors.dart';
 import 'package:home_services/Views/Category/categories.dart';
 import 'package:home_services/Views/Wokers_views/home/worker_home.dart';
 import 'package:home_services/Views/home/home_screen.dart';
+import 'package:home_services/Views/profile/profile_screen.dart';
+import 'package:home_services/Views/shop/productspage.dart';
 import 'package:home_services/models/user_model.dart';
 import 'package:line_icons/line_icons.dart';
 
@@ -21,15 +23,18 @@ class _CustomNavbarState extends State<CustomNavbar> {
   void initState() {
     super.initState();
     _widgetOptions = [
-      (widget.user!.userType == "User") ? HomeScreen(user: widget.user!,) : WorkerHomeScreen(),
+      (widget.user!.userType == "User")
+          ? HomeScreen(
+              user: widget.user!,
+            )
+          : WorkerHomeScreen(),
       CategoriesScreen(),
-      Text('Shop'),
+      ProductPage(),
       Text('Booking'),
-      Text('Profile'),
+      ProfileScreen()
     ];
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(

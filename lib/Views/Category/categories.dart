@@ -10,23 +10,15 @@ import '../../Utils/Components/custom_button.dart';
 import '../../Utils/constants/colors.dart';
 
 class CategoriesScreen extends StatefulWidget {
-  const CategoriesScreen({
-    super.key,
-  });
+  const CategoriesScreen({super.key});
 
   @override
   State<CategoriesScreen> createState() => _CategoriesScreenState();
 }
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
-  int selectedCategoryIndex = 0; // Initialize with the index of 'All'
-
+  int selectedCategoryIndex = 0;
   final ScrollController _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,170 +26,115 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            SizedBox(
-              height: 20.h,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Categories",
-                  style:
-                      TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w800),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 20.h,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.w),
-              child: Container(
-                height: 31.h,
-                decoration: BoxDecoration(
-                    color: Colors.white10,
-                    borderRadius: BorderRadius.circular(10.r)),
-                child: ListView(
-                  controller: _scrollController,
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    CustomButtonWidget(
-                      buttonHeight: 35.h,
-                      buttonWidth: 100.w,
-                      buttonBackgroundColor: (selectedCategoryIndex == 0)
-                          ? AppColors.appColor
-                          : Colors.white,
-                      textColor: (selectedCategoryIndex == 0)
-                          ? Colors.white
-                          : AppColors.appColor,
-                      text: "All",
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      onPressed: () {
-                        changeScreen(0);
-                      },
-                    ),
-                    SizedBox(
-                      width: 10.w,
-                    ),
-                    CustomButtonWidget(
-                      buttonHeight: 35.h,
-                      buttonWidth: 110.w,
-                      buttonBackgroundColor: (selectedCategoryIndex == 1)
-                          ? AppColors.appColor
-                          : Colors.white,
-                      textColor: (selectedCategoryIndex == 1)
-                          ? Colors.white
-                          : AppColors.appColor,
-                      text: "Painting",
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      onPressed: () {
-                        changeScreen(1);
-                      },
-                    ),
-                    SizedBox(
-                      width: 10.w,
-                    ),
-                    CustomButtonWidget(
-                      buttonHeight: 35.h,
-                      buttonWidth: 110.w,
-                      text: "Cleaning",
-                      buttonBackgroundColor: (selectedCategoryIndex == 2)
-                          ? AppColors.appColor
-                          : Colors.white,
-                      textColor: (selectedCategoryIndex == 2)
-                          ? Colors.white
-                          : AppColors.appColor,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      onPressed: () {
-                        changeScreen(2);
-                      },
-                    ),
-                    SizedBox(
-                      width: 10.w,
-                    ),
-                    CustomButtonWidget(
-                      buttonHeight: 35.h,
-                      buttonWidth: 110.w,
-                      text: "Electric",
-                      buttonBackgroundColor: (selectedCategoryIndex == 3)
-                          ? AppColors.appColor
-                          : Colors.white,
-                      textColor: (selectedCategoryIndex == 3)
-                          ? Colors.white
-                          : AppColors.appColor,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      onPressed: () {
-                        changeScreen(3);
-                      },
-                    ),
-                    SizedBox(
-                      width: 10.w,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        _scrollController.jumpTo(_scrollController.offset);
-                      },
-                      child: CustomButtonWidget(
-                        buttonHeight: 35.h,
-                        buttonWidth: 112.w,
-                        text: "Carpentors",
-                        buttonBackgroundColor: (selectedCategoryIndex == 4)
-                            ? AppColors.appColor
-                            : Colors.white,
-                        textColor: (selectedCategoryIndex == 4)
-                            ? Colors.white
-                            : AppColors.appColor,
-                        fontSize: 13.sp,
-                        buttonElevation: 0,
-                        fontWeight: FontWeight.w500,
-                        onPressed: () {
-                          changeScreen(4);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: _buildContent(selectedCategoryIndex),
-            ),
+            SizedBox(height: 20.h),
+            _buildTitle(),
+            SizedBox(height: 20.h),
+            _buildCategorySelector(),
+            SizedBox(height: 20.h),
+            Expanded(child: _buildAnimatedContent()),
           ],
         ),
       ),
     );
   }
 
-  void changeScreen(int screenIndex) {
+  Widget _buildTitle() {
+    return Text(
+      "Categories",
+      style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold),
+    );
+  }
+
+  Widget _buildCategorySelector() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10.w),
+      child: Container(
+        height: 50.h,
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          borderRadius: BorderRadius.circular(10.r),
+        ),
+        child: ListView(
+          controller: _scrollController,
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          children: [
+            _buildCategoryButton("All", 0),
+            _buildCategoryButton("Painting", 1),
+            _buildCategoryButton("Cleaning", 2),
+            _buildCategoryButton("Electric", 3),
+            _buildCategoryButton("Carpenters", 4),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryButton(String text, int index) {
+    bool isSelected = selectedCategoryIndex == index;
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5.w),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        height: 40.h,
+        width: 110.w,
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.appColor : Colors.white,
+          borderRadius: BorderRadius.circular(30.r),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                      color: AppColors.appColor.withOpacity(0.4),
+                      blurRadius: 10)
+                ]
+              : [],
+        ),
+        child: TextButton(
+          onPressed: () => _onCategorySelected(index),
+          child: Text(
+            text,
+            style: TextStyle(
+              color: isSelected ? Colors.white : AppColors.appColor,
+              fontWeight: FontWeight.w500,
+              fontSize: 16.sp,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAnimatedContent() {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 500),
+      transitionBuilder: (Widget child, Animation<double> animation) {
+        return FadeTransition(
+          opacity: animation,
+          child: child,
+        );
+      },
+      child: _buildContent(selectedCategoryIndex),
+    );
+  }
+
+  void _onCategorySelected(int index) {
     setState(() {
-      selectedCategoryIndex = screenIndex;
+      selectedCategoryIndex = index;
     });
   }
 
-  Widget _buildContent(int selectedCategoryIndex) {
-    if (selectedCategoryIndex == 0) {
-      return const AllServices();
-    } else if (selectedCategoryIndex == 1) {
-      return const PaintingServices();
-    } else if (selectedCategoryIndex == 2) {
-      return const CleaningServices();
-    } else if (selectedCategoryIndex == 3) {
-      return const ElectricServices();
-    } else if (selectedCategoryIndex == 4) {
-      return const CarpentoryServices();
-    } else {
-      // Handle other indices or default to AllProductScreen.
-      return const AllServices();
+  Widget _buildContent(int index) {
+    switch (index) {
+      case 1:
+        return const PaintingServices();
+      case 2:
+        return const CleaningServices();
+      case 3:
+        return const ElectricServices();
+      case 4:
+        return const CarpentoryServices();
+      default:
+        return const AllServices();
     }
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
   }
 }
