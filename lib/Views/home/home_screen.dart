@@ -115,7 +115,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   ],
                 ),
-
                 // Categories Section
                 SizedBox(height: 10.h),
                 Text(

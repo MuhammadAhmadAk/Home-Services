@@ -22,8 +22,7 @@ class ServiceWidget extends StatefulWidget {
   State<ServiceWidget> createState() => _ServiceWidgetState();
 }
 
-class _ServiceWidgetState extends State<ServiceWidget>
-    with SingleTickerProviderStateMixin {
+class _ServiceWidgetState extends State<ServiceWidget> with SingleTickerProviderStateMixin {
   late bool isFavourite = false;
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
@@ -51,133 +50,104 @@ class _ServiceWidgetState extends State<ServiceWidget>
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        GestureDetector(
-          onTap: () {
-            _animateFavorite();
-          },
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 500),
-            height: 120.h,
-            width: 330.w,
-            margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12.r),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 8,
-                  spreadRadius: 2,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                // Service Image
-                Container(
-                  height: 118.h,
-                  width: 110.w,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage(widget.imgPath),
+        Padding(
+          padding: EdgeInsets.all(8.w),
+          child: Container(
+            child: GestureDetector(
+              onTap: _animateFavorite,
+              child: Container(
+                height: 140.h,
+                width: double.infinity,
+                padding: EdgeInsets.all(12.w),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10,
+                      spreadRadius: 2,
+                      offset: const Offset(0, 5),
                     ),
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(
-                      color: AppColors.darkBlueColor.withOpacity(0.2),
-                    ),
-                  ),
+                  ],
                 ),
-                // Service Details
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 8.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(widget.name,
-                              style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w600)),
-                          SizedBox(width: 60.w),
-                        ],
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Service Image
+                    Container(
+                      height: 100.h,
+                      width: 100.w,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: AssetImage(widget.imgPath),
+                        ),
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(
+                          color: AppColors.darkBlueColor.withOpacity(0.2),
+                        ),
                       ),
-                      SizedBox(height: 4.h),
-                      Text(widget.profession,
-                          style: TextStyle(
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.greyColor)),
-                      SizedBox(height: 6.h),
-                      Row(
+                    ),
+                    SizedBox(width: 12.w),
+                    // Service Details
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("\$${widget.price}",
-                              style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w600)),
-                          Text("(Per Hour)",
-                              style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.greyColor)),
-                        ],
-                      ),
-                      SizedBox(height: 8.h),
-                      Row(
-                        children: [
-                          // Rating with Star Icon
-                          Container(
-                            width: 53.w,
-                            height: 22.h,
-                            decoration: BoxDecoration(
-                              color: AppColors.greyColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(20.r),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 2.w),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.star_rounded,
-                                      color: Colors.amber, size: 20.w),
-                                  Text("(${widget.ratting})",
-                                      style: TextStyle(
-                                          fontSize: 13.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.greyColor)),
-                                ],
-                              ),
-                            ),
+                          Text(widget.name, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
+                          SizedBox(height: 6.h),
+                          Text(widget.profession, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500, color: AppColors.greyColor)),
+                          SizedBox(height: 6.h),
+                          Row(
+                            children: [
+                              Text("\$${widget.price}", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
+                              SizedBox(width: 6.w),
+                              Text("(Per Hour)", style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: AppColors.greyColor)),
+                            ],
                           ),
-                          SizedBox(width: 10.w),
-                          Text("44 Reviews",
-                              style: TextStyle(
-                                  fontSize: 13.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.greyColor)),
+                          SizedBox(height: 8.h),
+                          Row(
+                            children: [
+                              // Rating with Star Icon
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 6.w),
+                                height: 24.h,
+                                decoration: BoxDecoration(
+                                  color: AppColors.greyColor.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(20.r),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.star_rounded, color: Colors.amber, size: 18.w),
+                                    SizedBox(width: 4.w),
+                                    Text(widget.ratting, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500, color: AppColors.greyColor)),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 12.w),
+                              Text("44 Reviews", style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500, color: AppColors.greyColor)),
+                            ],
+                          ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
         // Favorite Button with Animation
         Positioned(
-          top: 14.h,
-          right: 10.w,
+          top: 12.h,
+          right: 16.w,
           child: GestureDetector(
             onTap: () {
               setState(() {
                 isFavourite = !isFavourite;
-                isFavourite
-                    ? _animationController.forward()
-                    : _animationController.reverse();
+                isFavourite ? _animationController.forward() : _animationController.reverse();
               });
             },
             child: ScaleTransition(

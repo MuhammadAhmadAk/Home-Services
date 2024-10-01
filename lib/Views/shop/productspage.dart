@@ -1,37 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:home_services/Views/shop/widgets/product_card.dart';
+import 'package:home_services/main.dart';
 
 class ProductPage extends StatelessWidget {
   final List<Map<String, dynamic>> products = [
-    {
-      'image':
-          'https://as1.ftcdn.net/v2/jpg/02/60/49/74/1000_F_260497495_f8cVb5sVLHx1lku5YPmMCvy39g2zlhAG.jpg',
-      'name': 'ProArt Studiobook',
-      'brand': 'Asus',
-      'price': '\$2338,1'
-    },
-    {
-      'image':
-          'https://as1.ftcdn.net/v2/jpg/02/60/49/74/1000_F_260497495_f8cVb5sVLHx1lku5YPmMCvy39g2zlhAG.jpg',
-      'name': 'Zenbook Duo',
-      'brand': 'Asus',
-      'price': '\$1272,2'
-    },
-    {
-      'image':
-          'https://as2.ftcdn.net/v2/jpg/03/28/67/13/1000_F_328671336_hqPPPzmf0RVNVc4h6UELWxlTREyPfjwC.jpg',
-      'name': 'Zenbook Pro Duo',
-      'brand': 'Asus',
-      'price': '\$3096,97'
-    },
-    {
-      'image':
-          'https://as2.ftcdn.net/v2/jpg/03/28/67/13/1000_F_328671336_hqPPPzmf0RVNVc4h6UELWxlTREyPfjwC.jpg',
-      'name': 'Macbook Pro',
-      'brand': 'Apple',
-      'price': '\$1238,75'
-    },
+    {'image': 'https://as1.ftcdn.net/v2/jpg/02/60/49/74/1000_F_260497495_f8cVb5sVLHx1lku5YPmMCvy39g2zlhAG.jpg', 'name': 'ProArt Studiobook', 'brand': 'Asus', 'price': '\$2338,1'},
+    {'image': 'https://as1.ftcdn.net/v2/jpg/02/60/49/74/1000_F_260497495_f8cVb5sVLHx1lku5YPmMCvy39g2zlhAG.jpg', 'name': 'Zenbook Duo', 'brand': 'Asus', 'price': '\$1272,2'},
+    {'image': 'https://as2.ftcdn.net/v2/jpg/03/28/67/13/1000_F_328671336_hqPPPzmf0RVNVc4h6UELWxlTREyPfjwC.jpg', 'name': 'Zenbook Pro Duo', 'brand': 'Asus', 'price': '\$3096,97'},
+    {'image': 'https://as2.ftcdn.net/v2/jpg/03/28/67/13/1000_F_328671336_hqPPPzmf0RVNVc4h6UELWxlTREyPfjwC.jpg', 'name': 'Macbook Pro', 'brand': 'Apple', 'price': '\$1238,75'},
   ];
 
   @override
@@ -55,14 +33,14 @@ class ProductPage extends StatelessWidget {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSearchBar(),
-            SizedBox(height: 20),
+            SizedBox(height: 15.h),
             _buildProductCountAndSort(),
-            SizedBox(height: 20),
+            SizedBox(height: 10.h),
             Expanded(child: _buildProductGrid()),
           ],
         ),
@@ -81,7 +59,7 @@ class ProductPage extends StatelessWidget {
         ),
         filled: true,
         fillColor: Colors.white,
-        contentPadding: EdgeInsets.all(16),
+        contentPadding: EdgeInsets.all(8),
       ),
     );
   }

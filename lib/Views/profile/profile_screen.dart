@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:home_services/Utils/Components/custom_button.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -57,7 +58,6 @@ class _ProfileScreenState extends State<ProfileScreen>
         elevation: 0,
         title: Text('Profile', style: TextStyle(fontWeight: FontWeight.bold)),
         automaticallyImplyLeading: false,
-        centerTitle: true,
         actions: [
           SlideTransition(
             position: _slideAnimation,
@@ -71,7 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding:  EdgeInsets.symmetric(horizontal: 10.w,vertical: 10.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -94,8 +94,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                         child: AnimatedContainer(
                           duration: Duration(milliseconds: 300),
                           curve: Curves.easeInOut,
-                          height: 140,
-                          width: 140,
+                          height: 130,
+                          width: 130,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
@@ -115,16 +115,17 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 10.h),
             FadeTransition(
               opacity: _fadeAnimation,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     name,
                     style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                           fontWeight: FontWeight.bold,
+                          fontSize: 22.sp,
                           color: Colors.black87,
                         ),
                   ),
@@ -135,9 +136,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                             color: Colors.grey[700],
                           ),
                     ),
-                  SizedBox(height: 10),
                   if (rating > 0.0)
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.star, color: Colors.amber, size: 24),
                         SizedBox(width: 4),
@@ -147,10 +148,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ),
                       ],
                     ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 10.h),
                   if (experience.isNotEmpty)
                     Card(
-                      elevation: 5,
+                      elevation: 3,
                       child: ExpansionTile(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.r)),
@@ -160,7 +161,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ),
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: EdgeInsets.all(5),
                             child: Text(
                               experience,
                               style: Theme.of(context).textTheme.labelLarge,
@@ -169,9 +170,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ],
                       ),
                     ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 8.h),
                   Card(
-                    elevation: 5,
+                    elevation: 3,
                     child: ListTile(
                       title: Text(
                         'Contact Info',
@@ -183,9 +184,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                       ),
                     ),
                   ),
-                  SizedBox(height: 16),
+                  SizedBox(height: 8.h),
                   Card(
-                    elevation: 5,
+                    elevation: 3,
                     child: ListTile(
                       title: Text(
                         'Address',
@@ -197,9 +198,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 8.h),
                   Card(
-                    elevation: 5,
+                    elevation: 3,
                     child: ExpansionTile(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.r)),
@@ -209,7 +210,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       ),
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(5.0),
                           child: Text(
                             bio,
                             style: Theme.of(context).textTheme.labelLarge,
@@ -221,19 +222,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ],
               ),
             ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Handle logout
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.redAccent,
-                padding: EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+            SizedBox(height: 10.h),
+            Center(
+              child: CustomButtonWidget(
+                onPressed: (){},
+              text: "Logout",
+              
               ),
-              child: Text('Logout', style: TextStyle(fontSize: 16)),
             ),
           ],
         ),

@@ -10,6 +10,8 @@ import 'package:home_services/Views/shop/productspage.dart';
 import 'package:home_services/models/user_model.dart';
 import 'package:line_icons/line_icons.dart';
 
+import 'booking/booking.dart';
+
 class CustomNavbar extends StatefulWidget {
   const CustomNavbar({super.key, this.user});
   final UserModel? user;
@@ -30,7 +32,7 @@ class _CustomNavbarState extends State<CustomNavbar> {
           : WorkerHomeScreen(),
       CategoriesScreen(),
       ProductPage(),
-      Text('Booking'),
+      BookingScreen(),
       ProfileScreen()
     ];
   }

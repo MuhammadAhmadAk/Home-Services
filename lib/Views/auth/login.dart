@@ -115,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           CupertinoPageRoute(
                             builder: (context) => const RegisterScreen(),

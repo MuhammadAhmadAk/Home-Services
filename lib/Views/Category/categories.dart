@@ -26,11 +26,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            SizedBox(height: 20.h),
+            SizedBox(height: 10.h),
             _buildTitle(),
-            SizedBox(height: 20.h),
+            SizedBox(height: 10.h),
             _buildCategorySelector(),
-            SizedBox(height: 20.h),
+            SizedBox(height: 10.h),
             Expanded(child: _buildAnimatedContent()),
           ],
         ),
@@ -41,7 +41,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Widget _buildTitle() {
     return Text(
       "Categories",
-      style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold),
+      style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
     );
   }
 
@@ -76,8 +76,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       padding: EdgeInsets.symmetric(horizontal: 5.w),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
-        height: 40.h,
-        width: 110.w,
+        height: 30.h,
+        width: 90.w,
         decoration: BoxDecoration(
           color: isSelected ? AppColors.appColor : Colors.white,
           borderRadius: BorderRadius.circular(30.r),
@@ -96,7 +96,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             style: TextStyle(
               color: isSelected ? Colors.white : AppColors.appColor,
               fontWeight: FontWeight.w500,
-              fontSize: 16.sp,
+              fontSize: 14.sp,
             ),
           ),
         ),
