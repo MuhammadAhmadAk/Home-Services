@@ -6,6 +6,13 @@ final class AuthInitialState extends AuthState {}
 
 class AuthLoadingState extends AuthState {}
 
+class AuthProfileFetchingState extends AuthState {}
+
+class AuthUserProfileFetchState extends AuthState {
+  final UserModel user;
+  AuthUserProfileFetchState({required this.user});
+}
+
 class AuthRegisteredState extends AuthState {
   final UserModel user;
 

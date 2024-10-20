@@ -2,11 +2,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:home_services/Repositories/worker_profiles_repo.dart';
 import 'package:home_services/Utils/constants/colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_services/Views/splash_screen.dart';
 import 'package:home_services/bloc/Auth-Cubit/auth_cubit.dart';
 import 'package:home_services/firebase_options.dart';
+
+import 'bloc/worker-cubit/wokers_profile_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +27,9 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => AuthCubit(),
+          ),
+          BlocProvider(
+            create: (context) => WokersProfileCubit(),
           ),
         ],
         child: ScreenUtilInit(

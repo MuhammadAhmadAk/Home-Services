@@ -44,4 +44,14 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthErrorState(error: e.toString()));
     }
   }
+
+  Future<void> fetchUserProfile(String userId) async {
+    emit(AuthProfileFetchingState());
+    try {
+      UserModel user = await authRepo.getUserById(userId);
+      emit(AuthUserProfileFetchState(user: user));
+    } catch (e) {
+      emit(AuthErrorState(error: e.toString()));
+    }
+  }
 }
