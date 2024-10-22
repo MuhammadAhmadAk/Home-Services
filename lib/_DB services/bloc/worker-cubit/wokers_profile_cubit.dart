@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:home_services/Repositories/worker_profiles_repo.dart';
+import 'package:home_services/_DB%20services/Repositories/worker_profiles_repo.dart';
 
 import 'wokers_profile_state.dart';
 
@@ -15,6 +15,7 @@ class WokersProfileCubit extends Cubit<WokersProfileState> {
     required String address,
     required String experience,
     required String bio,
+    required String hourlyprice,
     required String profilePicture,
   }) async {
     emit(WokersProfileLoading());
@@ -26,6 +27,7 @@ class WokersProfileCubit extends Cubit<WokersProfileState> {
         address: address,
         experience: experience,
         bio: bio,
+        hourlyPrice: hourlyprice,
         profilePic: profilePicture,
       );
       emit(WokersProfileProfileCreatedState(wokersProfile: profile!));
@@ -41,6 +43,8 @@ class WokersProfileCubit extends Cubit<WokersProfileState> {
     String? address,
     String? experience,
     String? bio,
+    String? hourlyPrice,
+    String? profilePicture,
   }) async {
     emit(WokersProfileLoading());
     try {
@@ -61,6 +65,26 @@ class WokersProfileCubit extends Cubit<WokersProfileState> {
     try {
       var profile = await workerProfilesRepo.getWorkerById(workerId);
       emit(WokersProfileProfileFetchedState(wokersProfile: profile!));
+    } on Exception catch (e) {
+      emit(WorkerProfileErrorState(errorMessage: e.toString()));
+    }
+  }
+
+  Future<void> getAllProfiles() async {
+    emit(WokersProfileLoading());
+    try {
+      var profiles = await workerProfilesRepo.getAllWorkersExceptCurrentUser();
+      emit(WokersAllProfileProfileFetchState(wokersProfile: profiles));
+    } on Exception catch (e) {
+      emit(WorkerProfileErrorState(errorMessage: e.toString()));
+    }
+  }
+
+  Future<void> getWorkerByCategory(String Category) async {
+    emit(WokersProfileLoading());
+    try {
+      var profiles = await workerProfilesRepo.getWorkersByCategory(Category);
+      emit(WokersAllProfileProfileFetchState(wokersProfile: profiles));
     } on Exception catch (e) {
       emit(WorkerProfileErrorState(errorMessage: e.toString()));
     }

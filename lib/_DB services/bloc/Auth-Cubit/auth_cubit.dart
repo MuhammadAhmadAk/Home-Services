@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:home_services/Repositories/auth_repo.dart';
-import 'package:home_services/bloc/Auth-Cubit/auth_state.dart';
+import 'package:home_services/_DB%20services/Repositories/auth_repo.dart';
+import 'package:home_services/_DB%20services/bloc/Auth-Cubit/auth_state.dart';
 import 'package:home_services/models/user_model.dart';
 
 class AuthCubit extends Cubit<AuthState> {

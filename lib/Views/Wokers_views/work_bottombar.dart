@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_services/Utils/constants/colors.dart';
 import 'package:home_services/Views/Category/categories.dart';
+import 'package:home_services/Views/Wokers_views/booking_request.dart';
 import 'package:home_services/Views/Wokers_views/home/worker_home.dart';
+import 'package:home_services/Views/Wokers_views/w_profile.dart';
 import 'package:home_services/Views/home/home_screen.dart';
 import 'package:home_services/Views/profile/profile_screen.dart';
 import 'package:home_services/Views/shop/productspage.dart';
@@ -11,16 +13,14 @@ import 'package:home_services/_DB%20services/SharedPref%20services/sharedpref_au
 import 'package:home_services/models/user_model.dart';
 import 'package:line_icons/line_icons.dart';
 
-import 'booking/booking.dart';
-
-class CustomNavbar extends StatefulWidget {
-  const CustomNavbar({super.key});
+class WorkerCustomNavbar extends StatefulWidget {
+  const WorkerCustomNavbar({super.key});
 
   @override
-  State<CustomNavbar> createState() => _CustomNavbarState();
+  State<WorkerCustomNavbar> createState() => _WorkerCustomNavbarState();
 }
 
-class _CustomNavbarState extends State<CustomNavbar> {
+class _WorkerCustomNavbarState extends State<WorkerCustomNavbar> {
   int _selectedIndex = 0;
   UserModel? user;
   List<Widget>? _widgetOptions;
@@ -35,15 +35,10 @@ class _CustomNavbarState extends State<CustomNavbar> {
     user = (await SharedPrefAuth.getUser())!;
     setState(() {
       _widgetOptions = [
-        (user!.userType == "User")
-            ? HomeScreen(
-                user: user!,
-              )
-            : WorkerHomeScreen(),
-        CategoriesScreen(),
-        ProductPage(),
-        BookingScreen(),
-        ProfileScreen()
+        WorkerHomeScreen(),
+        BookingRequests(),
+        Text("Booking Request"),
+        WorkerProfileScreen(),
       ];
     });
   }
@@ -87,16 +82,12 @@ class _CustomNavbarState extends State<CustomNavbar> {
               icon: LineIcons.home,
             ),
             CustomBottomBarItems(
-              label: 'Categories',
-              icon: Icons.category,
+              label: 'Works Requests',
+              icon: Icons.work,
             ),
             CustomBottomBarItems(
               label: 'Shop',
               icon: Icons.store_mall_directory,
-            ),
-            CustomBottomBarItems(
-              label: 'Bookings',
-              icon: Icons.book_online,
             ),
             CustomBottomBarItems(
               label: 'Profile',

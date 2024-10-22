@@ -11,6 +11,11 @@ final class WokersProfileProfileFetchedState extends WokersProfileState {
   WokersProfileProfileFetchedState({required this.wokersProfile});
 }
 
+final class WokersAllProfileProfileFetchState extends WokersProfileState {
+  final List<Map<String, dynamic>> wokersProfile;
+  WokersAllProfileProfileFetchState({required this.wokersProfile});
+}
+
 final class WokersProfileProfileCreatedState extends WokersProfileState {
   final Map<String, dynamic> wokersProfile;
   WokersProfileProfileCreatedState({required this.wokersProfile});

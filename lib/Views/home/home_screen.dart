@@ -7,6 +7,8 @@ import 'package:home_services/Utils/constants/assets.dart';
 import 'package:home_services/Utils/constants/colors.dart';
 import 'package:home_services/models/user_model.dart';
 
+import '../../Utils/Components/custom_drawer.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.user});
   final UserModel user;
@@ -16,16 +18,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Color> catColor = [
-    Colors.pink.withOpacity(0.1),
-    Colors.blue.withOpacity(0.1),
-    Colors.brown.withOpacity(0.1),
-    AppColors.appColor.withOpacity(0.1),
-    Colors.pink.withOpacity(0.1),
-    Colors.blue.withOpacity(0.1),
-    Colors.brown.withOpacity(0.1),
+  List<String> imgPath = [
+    ImgAssets.splash1,
+    ImgAssets.carpentry,
+    ImgAssets.cleaning,
+    ImgAssets.electricity,
+    ImgAssets.mechanic,
+    ImgAssets.plumbering,
+    ImgAssets.painting
   ];
-  List<String> imgPath = [ImgAssets.splash1, ImgAssets.carpentry, ImgAssets.cleaning, ImgAssets.electricity, ImgAssets.mechanic, ImgAssets.plumbering, ImgAssets.painting];
   List<String> imgPath2 = [
     ImgAssets.profileImg1,
     ImgAssets.profileImg2,
@@ -34,8 +35,23 @@ class _HomeScreenState extends State<HomeScreen> {
     ImgAssets.profileImg5,
     ImgAssets.profileImg6,
   ];
-  List<String> catName = ["All", "Carpenter", "Cleaner", "Electrician", "Mechanic", "Plumber", "Painter"];
-  List<String> name = ["johny", "Peter", "Johnson", "John wick", "Gojo", "Tanjaro"];
+  List<String> catName = [
+    "All",
+    "Carpenter",
+    "Cleaner",
+    "Electrician",
+    "Mechanic",
+    "Plumber",
+    "Painter"
+  ];
+  List<String> name = [
+    "johny",
+    "Peter",
+    "Johnson",
+    "John wick",
+    "Gojo",
+    "Tanjaro"
+  ];
   late PageController _pageController;
   late Timer _timer;
 
@@ -47,7 +63,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Container(
           height: 40.h,
           width: 330.w,
-          decoration: BoxDecoration(color: AppColors.appColor.withOpacity(0.9), borderRadius: BorderRadius.circular(10.r)),
+          decoration: BoxDecoration(
+              color: AppColors.appColor.withOpacity(0.9),
+              borderRadius: BorderRadius.circular(10.r)),
           child: Center(
             child: Text(
               "Get Discount Upto 40%",
@@ -84,34 +102,48 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
+      drawer: CustomDrawer(
+        user: widget.user,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           // Wrap the entire body in SingleChildScrollView
           child: Padding(
             padding: EdgeInsets.all(10.w),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start, // Ensure everything is aligned to the left
+              crossAxisAlignment: CrossAxisAlignment
+                  .start, // Ensure everything is aligned to the left
               children: [
                 // Header
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    GestureDetector(
+                        onTap: () {
+                          _globalKey.currentState!.openDrawer();
+                        },
+                        child: Icon(Icons.menu)),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "Welcome!",
-                          style: TextStyle(color: AppColors.greyColor, fontSize: 16.sp),
+                          style: TextStyle(
+                              color: AppColors.greyColor, fontSize: 16.sp),
                         ),
-                        Text(widget.user.name, style: TextStyle(fontSize: 18.sp)),
+                        Text(widget.user.name,
+                            style: TextStyle(fontSize: 18.sp)),
                       ],
                     ),
                     CircleAvatar(
                       radius: 28.r,
-                      backgroundImage: NetworkImage(widget.user.profilePic.toString()),
+                      backgroundImage:
+                          NetworkImage(widget.user.profilePic.toString()),
                     )
                   ],
                 ),
@@ -119,7 +151,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 10.h),
                 Text(
                   'Categories',
-                  style: TextStyle(color: AppColors.appColor, fontSize: 16.sp, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                      color: AppColors.appColor,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600),
                 ),
                 SizedBox(height: 10.h),
                 SizedBox(
@@ -215,7 +250,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 // The existing ListView.builder remains the same with physics handling scrolling behavior
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true, // Ensure it takes the space it needs and doesn't cause overflow
+                  shrinkWrap:
+                      true, // Ensure it takes the space it needs and doesn't cause overflow
                   itemCount: imgPath2.length,
                   itemBuilder: (BuildContext context, int index) {
                     return ServiceWidget(
@@ -235,7 +271,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
 
 class PageIndicator extends StatefulWidget {
   final int length;
@@ -261,7 +296,9 @@ class _PageIndicatorState extends State<PageIndicator> {
         margin: EdgeInsets.symmetric(horizontal: 2),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: index == widget.currentPage ? Colors.blue : Colors.grey.withOpacity(0.5),
+          color: index == widget.currentPage
+              ? Colors.blue
+              : Colors.grey.withOpacity(0.5),
         ),
       );
     });
@@ -298,7 +335,9 @@ class RowText extends StatelessWidget {
             title,
             style: TextStyle(fontSize: 19.sp, fontWeight: FontWeight.w700),
           ),
-          TextButton(onPressed: onTap, child: Text(btnText, style: TextStyle(fontSize: 14.sp)))
+          TextButton(
+              onPressed: onTap,
+              child: Text(btnText, style: TextStyle(fontSize: 14.sp)))
         ],
       ),
     );

@@ -6,6 +6,7 @@ class UserModel {
   String password;
   String userType; // Represent user type as a string
   String? profilePic; // URL of the profile picture
+  bool? isWoker;
 
   UserModel({
     required this.userId, // Include userId in the constructor
@@ -15,6 +16,7 @@ class UserModel {
     required this.password,
     required this.userType,
     this.profilePic, // Nullable field for profile picture URL
+    this.isWoker, // Nullable field for indicating whether the user is a worker or not
   });
 
   // Method to convert UserModel instance to a map
@@ -27,6 +29,7 @@ class UserModel {
       'password': password,
       'userType': userType,
       'profilePic': profilePic, // Include profilePic in the map
+      'isWoker': isWoker, // Include isWoker in the map
     };
   }
 
@@ -40,6 +43,7 @@ class UserModel {
       password: map['password'] ?? '',
       userType: map['userType'] ?? '',
       profilePic: map['profilePic'], // Retrieve profilePic from the map
+      isWoker: map['isWoker'], // Retrieve isWoker from the map
     );
   }
 }

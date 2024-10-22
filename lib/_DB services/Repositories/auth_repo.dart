@@ -23,16 +23,16 @@ class AuthRepo {
 
       // Create a UserModel instance
       UserModel newUser = UserModel(
-        userId: DateTime.now().millisecondsSinceEpoch.toString(),
-        name: name,
-        email: email,
-        phone: phone,
-        password: password,
-        userType: userType,
-      );
+          userId: user!.uid,
+          name: name,
+          email: email,
+          phone: phone,
+          password: password,
+          userType: userType,
+          isWoker: false);
 
       // Save user details to Firestore
-      await _firestore.collection('users').doc(user!.uid).set(newUser.toMap());
+      await _firestore.collection('users').doc(user.uid).set(newUser.toMap());
 
       return newUser;
     } catch (e) {
@@ -100,6 +100,18 @@ class AuthRepo {
       });
       return profilePicUrl;
     } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> updateIsWorkerStatus(String userId, bool isWorker) async {
+    try {
+      // Update the isWorker status in the Firestore document for the given user
+      await _firestore.collection('users').doc(userId).update({
+        'isWoker': isWorker,
+      });
+    } catch (e) {
+      // Rethrow any exceptions to be handled by the caller
       rethrow;
     }
   }

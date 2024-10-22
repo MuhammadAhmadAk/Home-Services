@@ -7,8 +7,8 @@ import 'package:home_services/Utils/Components/app_loader.dart';
 import 'package:home_services/Utils/Components/custom_button.dart';
 import 'package:home_services/Utils/Components/custom_snakbar.dart';
 import 'package:home_services/Views/auth/login.dart';
-import 'package:home_services/bloc/Auth-Cubit/auth_cubit.dart';
-import 'package:home_services/bloc/Auth-Cubit/auth_state.dart';
+import 'package:home_services/_DB%20services/bloc/Auth-Cubit/auth_cubit.dart';
+import 'package:home_services/_DB%20services/bloc/Auth-Cubit/auth_state.dart';
 
 class UploadProfile extends StatefulWidget {
   const UploadProfile({super.key, required this.userId});
@@ -18,6 +18,7 @@ class UploadProfile extends StatefulWidget {
 }
 
 class _UploadProfileState extends State<UploadProfile> {
+  bool isLoading = false;
   StorageServices services = StorageServices();
   String? imgUrl;
   User? user = FirebaseAuth.instance.currentUser;
@@ -52,32 +53,46 @@ class _UploadProfileState extends State<UploadProfile> {
                 ),
                 Hero(
                   tag: 'profile_picture', // Unique tag for Hero animation
-                  child: CircleAvatar(
-                    radius: 150.r,
-                    backgroundColor: Colors.grey[200],
-                    backgroundImage:
-                        imgUrl != null ? NetworkImage(imgUrl!) : null,
-                    child: GestureDetector(
-                      onTap: () async {
-                        String? url =
-                            await services.uploadProfilePicture(user!.uid);
+                  child: GestureDetector(
+                    onTap: () async {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      String? url =
+                          await services.uploadProfilePicture(user!.uid);
+                      if (url != null) {
                         setState(() {
                           imgUrl = url;
+                          isLoading = false;
                         });
-                      },
+                      }
+                    },
+                    child: CircleAvatar(
+                      radius: 150.r,
+                      backgroundColor: Colors.grey[200],
+                      backgroundImage:
+                          imgUrl != null ? NetworkImage(imgUrl!) : null,
                       child: imgUrl == null
-                          ? Icon(Icons.person, size: 80, color: Colors.grey)
+                          ? (isLoading)
+                              ? CircularProgressIndicator()
+                              : Icon(Icons.person, size: 80, color: Colors.grey)
                           : null,
                     ),
                   ),
                 ),
                 SizedBox(height: 70.h),
-                CustomButtonWidget(
-                  text: "Upload Profile",
-                  onPressed: () async {
-                   await context.read<AuthCubit>().updateProfilePic(imgUrl!);
-                  },
-                )
+                (state is AuthLoadingState)
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : CustomButtonWidget(
+                        text: "Upload Profile",
+                        onPressed: () async {
+                          await context
+                              .read<AuthCubit>()
+                              .updateProfilePic(imgUrl!);
+                        },
+                      )
               ],
             ),
           ),

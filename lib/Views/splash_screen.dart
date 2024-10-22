@@ -4,7 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:home_services/Utils/constants/assets.dart';
 import 'package:home_services/Utils/constants/colors.dart';
+import 'package:home_services/Views/bottom_navbar.dart';
 import 'package:home_services/Views/onboarding_screen.dart';
+
+import '../_DB services/SharedPref services/sharedpref_auth.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -16,18 +19,34 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-
     super.initState();
     navigatetoScreen();
   }
 
-  void navigatetoScreen() {
+  void navigatetoScreen() async {
+    // Check the login status
+    bool isLoggedIn = await SharedPrefAuth.getLoginStatus();
+    String? userid = await SharedPrefAuth.getUserId();
+
     Future.delayed(Duration(seconds: 3), () {
-      Navigator.push(
+      if (isLoggedIn) {
+        // If logged in, navigate to HomeScreen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                CustomNavbar(), // Replace with your home screen
+          ),
+        );
+      } else {
+        // If not logged in, navigate to OnBoardingScreen
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => OnBoardingScreen(),
-          ));
+          ),
+        );
+      }
     });
   }
 

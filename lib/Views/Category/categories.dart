@@ -62,7 +62,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             _buildCategoryButton("All", 0),
             _buildCategoryButton("Painting", 1),
             _buildCategoryButton("Cleaning", 2),
-            _buildCategoryButton("Electric", 3),
+            _buildCategoryButton("Electrician", 3),
             _buildCategoryButton("Carpenters", 4),
           ],
         ),

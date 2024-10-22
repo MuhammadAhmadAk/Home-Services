@@ -10,19 +10,22 @@ class ServiceWidget extends StatefulWidget {
     required this.price,
     required this.ratting,
     required this.imgPath,
+    this.ontap,
   });
 
   final String name;
   final String profession;
   final String price;
   final String ratting;
-  final String imgPath;
+  final String? imgPath;
+  final VoidCallback? ontap;
 
   @override
   State<ServiceWidget> createState() => _ServiceWidgetState();
 }
 
-class _ServiceWidgetState extends State<ServiceWidget> with SingleTickerProviderStateMixin {
+class _ServiceWidgetState extends State<ServiceWidget>
+    with SingleTickerProviderStateMixin {
   late bool isFavourite = false;
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
@@ -54,7 +57,7 @@ class _ServiceWidgetState extends State<ServiceWidget> with SingleTickerProvider
           padding: EdgeInsets.all(8.w),
           child: Container(
             child: GestureDetector(
-              onTap: _animateFavorite,
+              onTap: widget.ontap,
               child: Container(
                 height: 140.h,
                 width: double.infinity,
@@ -81,7 +84,8 @@ class _ServiceWidgetState extends State<ServiceWidget> with SingleTickerProvider
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: AssetImage(widget.imgPath),
+                          image: NetworkImage(widget.imgPath ??
+                              "https://firebasestorage.googleapis.com/v0/b/homeservice-dbb17.appspot.com/o/profile_pics%2F1wXJodXviVUCoze7lND1eV6Qsi82?alt=media&token=2539040a-6b81-4879-90d3-ef885115b381"),
                         ),
                         borderRadius: BorderRadius.circular(12.r),
                         border: Border.all(
@@ -96,15 +100,29 @@ class _ServiceWidgetState extends State<ServiceWidget> with SingleTickerProvider
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(widget.name, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
+                          Text(widget.name,
+                              style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w600)),
                           SizedBox(height: 6.h),
-                          Text(widget.profession, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500, color: AppColors.greyColor)),
+                          Text(widget.profession,
+                              style: TextStyle(
+                                  fontSize: 13.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.greyColor)),
                           SizedBox(height: 6.h),
                           Row(
                             children: [
-                              Text("\$${widget.price}", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
+                              Text("\$${widget.price}",
+                                  style: TextStyle(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w600)),
                               SizedBox(width: 6.w),
-                              Text("(Per Hour)", style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: AppColors.greyColor)),
+                              Text("(Per Hour)",
+                                  style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.greyColor)),
                             ],
                           ),
                           SizedBox(height: 8.h),
@@ -120,14 +138,23 @@ class _ServiceWidgetState extends State<ServiceWidget> with SingleTickerProvider
                                 ),
                                 child: Row(
                                   children: [
-                                    Icon(Icons.star_rounded, color: Colors.amber, size: 18.w),
+                                    Icon(Icons.star_rounded,
+                                        color: Colors.amber, size: 18.w),
                                     SizedBox(width: 4.w),
-                                    Text(widget.ratting, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500, color: AppColors.greyColor)),
+                                    Text(widget.ratting,
+                                        style: TextStyle(
+                                            fontSize: 13.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.greyColor)),
                                   ],
                                 ),
                               ),
                               SizedBox(width: 12.w),
-                              Text("44 Reviews", style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w500, color: AppColors.greyColor)),
+                              Text("44 Reviews",
+                                  style: TextStyle(
+                                      fontSize: 13.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.greyColor)),
                             ],
                           ),
                         ],
@@ -147,7 +174,9 @@ class _ServiceWidgetState extends State<ServiceWidget> with SingleTickerProvider
             onTap: () {
               setState(() {
                 isFavourite = !isFavourite;
-                isFavourite ? _animationController.forward() : _animationController.reverse();
+                isFavourite
+                    ? _animationController.forward()
+                    : _animationController.reverse();
               });
             },
             child: ScaleTransition(

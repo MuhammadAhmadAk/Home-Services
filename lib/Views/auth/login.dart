@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,8 +9,9 @@ import 'package:home_services/Utils/Components/custom_textfield.dart';
 import 'package:home_services/Utils/constants/assets.dart';
 import 'package:home_services/Views/auth/register.dart';
 import 'package:home_services/Views/bottom_navbar.dart';
-import 'package:home_services/bloc/Auth-Cubit/auth_cubit.dart';
-import 'package:home_services/bloc/Auth-Cubit/auth_state.dart';
+import 'package:home_services/_DB%20services/SharedPref%20services/sharedpref_auth.dart';
+import 'package:home_services/_DB%20services/bloc/Auth-Cubit/auth_cubit.dart';
+import 'package:home_services/_DB%20services/bloc/Auth-Cubit/auth_state.dart';
 import '../../Utils/Components/app_loader.dart';
 import '../../Utils/Components/password_filed.dart';
 
@@ -29,13 +31,15 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthLoggedInState) {
+          String userid = FirebaseAuth.instance.currentUser!.uid;
           showMessage(context, "Success", "Login Successful");
+          SharedPrefAuth.setLoginStatus(true);
+          SharedPrefAuth.setUserId(userid);
+          SharedPrefAuth.saveUser(state.user);
           Navigator.pushReplacement(
             context,
             CupertinoPageRoute(
-              builder: (context) => CustomNavbar(
-                user: state.user,
-              ),
+              builder: (context) => CustomNavbar(),
             ),
           );
         } else if (state is AuthLoadingState) {

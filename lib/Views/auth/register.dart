@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,8 +9,8 @@ import 'package:home_services/Utils/Components/custom_textfield.dart';
 import 'package:home_services/Utils/constants/assets.dart';
 import 'package:home_services/Views/auth/login.dart';
 import 'package:home_services/Views/auth/upload_profile.dart';
-import 'package:home_services/bloc/Auth-Cubit/auth_cubit.dart';
-import 'package:home_services/bloc/Auth-Cubit/auth_state.dart';
+import 'package:home_services/_DB%20services/bloc/Auth-Cubit/auth_cubit.dart';
+import 'package:home_services/_DB%20services/bloc/Auth-Cubit/auth_state.dart';
 
 import '../../Utils/Components/password_filed.dart';
 
@@ -38,6 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
+        String userid = FirebaseAuth.instance.currentUser!.uid;
         if (state is AuthRegisteredState) {
           showMessage(context, "Success", "Registered Successfull");
           Navigator.pop(context);

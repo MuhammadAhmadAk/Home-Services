@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:home_services/_DB%20services/Repositories/auth_repo.dart';
 
 class WorkerProfilesRepo {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final AuthRepo authRepo = AuthRepo();
 
   // Collection reference for worker profiles
   CollectionReference get _workerProfilesCollection =>
@@ -17,6 +19,7 @@ class WorkerProfilesRepo {
     required String address,
     required String experience,
     required String bio,
+    required String hourlyPrice,
     required String profilePic,
   }) async {
     try {
@@ -40,9 +43,15 @@ class WorkerProfilesRepo {
         'experience': experience,
         'bio': bio,
         'profilePic': profilePic,
+        'hourlyPrice': hourlyPrice,
+        'isActive': true,
+        'isOnline': false,
+        'lastOnline': null,
+        'rating': 0,
         'createdAt': DateTime.timestamp().toString(),
       };
 
+      await authRepo.updateIsWorkerStatus(workerId, true);
       // Save worker profile to Firestore
       await _workerProfilesCollection.doc(workerId).set(workerData);
 
@@ -63,6 +72,8 @@ class WorkerProfilesRepo {
     String? address,
     String? experience,
     String? bio,
+    String? hourlyPrice,
+    String? profilePic,
   }) async {
     try {
       // Get the current logged-in user
@@ -85,6 +96,8 @@ class WorkerProfilesRepo {
       if (address != null) updatedData['address'] = address;
       if (experience != null) updatedData['experience'] = experience;
       if (bio != null) updatedData['bio'] = bio;
+      if (hourlyPrice != null) updatedData['hourlyPrice'] = hourlyPrice;
+      if (profilePic != null) updatedData['profilePic'] = profilePic;
 
       // Update worker profile in Firestore
       await _workerProfilesCollection.doc(workerId).update(updatedData);
@@ -149,6 +162,28 @@ class WorkerProfilesRepo {
       return workers;
     } catch (e) {
       print('Failed to fetch worker profiles: $e');
+      rethrow;
+    }
+  }
+
+// Function to get worker profiles by category
+  Future<List<Map<String, dynamic>>> getWorkersByCategory(
+      String category) async {
+    try {
+      // Query Firestore for worker profiles that match the given category
+      QuerySnapshot querySnapshot = await _workerProfilesCollection
+          .where('category', isEqualTo: category)
+          .get();
+
+      // Convert query result into a list of maps
+      List<Map<String, dynamic>> workers = querySnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+
+      print('Worker profiles fetched successfully for category: $category');
+      return workers;
+    } catch (e) {
+      print('Failed to fetch worker profiles by category: $e');
       rethrow;
     }
   }
