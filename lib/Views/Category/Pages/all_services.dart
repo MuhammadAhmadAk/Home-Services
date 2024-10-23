@@ -83,62 +83,69 @@ class _AllServicesState extends State<AllServices>
               }
             },
             builder: (context, state) {
-              return ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: AllProfiles.length,
-                itemBuilder: (BuildContext context, int index) {
-                  // Staggered animation delay
-                  final delay = index * 100;
-                  return AnimatedBuilder(
-                    animation: _controller,
-                    builder: (context, child) {
-                      return FadeTransition(
-                        opacity: _fadeAnimation,
-                        child: SlideTransition(
-                          position: Tween<Offset>(
-                            begin: const Offset(0.0, 0.5),
-                            end: Offset.zero,
-                          ).animate(CurvedAnimation(
-                            parent: _controller,
-                            curve: Interval(0.1 * index, 1.0,
-                                curve: Curves.easeOut),
-                          )),
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: ScaleTransition(
-                              scale: _scaleAnimation,
-                              child: ServiceWidget(
-                                ontap: () {
-                                  Navigator.push(
-                                      context,
-                                      CupertinoPageRoute(
-                                        builder: (context) => DetailPage(
-                                          imgUrl: AllProfiles[index]
-                                                  ["profilePic"]
-                                              .toString(),
-                                          name: AllProfiles[index]["name"],
-                                          rating:
-                                              "${AllProfiles[index]["rating"]}",
-                                          price: AllProfiles[index]
-                                              ["hourlyPrice"],
-                                          allDetails: AllProfiles[index],
-                                        ),
-                                      ));
-                                },
-                                imgPath: AllProfiles[index]["profilePic"],
-                                name: AllProfiles[index]["name"],
-                                profession: AllProfiles[index]["category"],
-                                price: AllProfiles[index]["hourlyPrice"],
-                                ratting: "${AllProfiles[index]["rating"]}",
+              return (AllProfiles.isEmpty)
+                  ? Center(
+                      child: Text("No Wokers Avalible"),
+                    )
+                  : ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: AllProfiles.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        // Staggered animation delay
+                        final delay = index * 100;
+                        return AnimatedBuilder(
+                          animation: _controller,
+                          builder: (context, child) {
+                            return FadeTransition(
+                              opacity: _fadeAnimation,
+                              child: SlideTransition(
+                                position: Tween<Offset>(
+                                  begin: const Offset(0.0, 0.5),
+                                  end: Offset.zero,
+                                ).animate(CurvedAnimation(
+                                  parent: _controller,
+                                  curve: Interval(0.1 * index, 1.0,
+                                      curve: Curves.easeOut),
+                                )),
+                                child: GestureDetector(
+                                  onTap: () {},
+                                  child: ScaleTransition(
+                                    scale: _scaleAnimation,
+                                    child: ServiceWidget(
+                                      ontap: () {
+                                        Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                              builder: (context) => DetailPage(
+                                                imgUrl: AllProfiles[index]
+                                                        ["profilePic"]
+                                                    .toString(),
+                                                name: AllProfiles[index]
+                                                    ["name"],
+                                                rating:
+                                                    "${AllProfiles[index]["rating"]}",
+                                                price: AllProfiles[index]
+                                                    ["hourlyPrice"],
+                                                allDetails: AllProfiles[index],
+                                              ),
+                                            ));
+                                      },
+                                      imgPath: AllProfiles[index]["profilePic"],
+                                      name: AllProfiles[index]["name"],
+                                      profession: AllProfiles[index]
+                                          ["category"],
+                                      price: AllProfiles[index]["hourlyPrice"],
+                                      ratting:
+                                          "${AllProfiles[index]["rating"]}",
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-              );
+                            );
+                          },
+                        );
+                      },
+                    );
             },
           );
         },

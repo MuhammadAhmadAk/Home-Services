@@ -1,10 +1,10 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:home_services/Utils/constants/colors.dart';
 import 'package:home_services/_DB%20services/Repositories/worker_profiles_repo.dart';
 import 'package:home_services/Utils/Components/custom_animated_dialog.dart';
 import 'package:home_services/Utils/Components/custom_button.dart';
@@ -13,7 +13,6 @@ import 'package:home_services/_DB%20services/SharedPref%20services/sharedpref_au
 import 'package:home_services/_DB%20services/bloc/Auth-Cubit/auth_cubit.dart';
 import 'package:home_services/_DB%20services/bloc/Auth-Cubit/auth_state.dart';
 import 'package:home_services/models/user_model.dart';
-
 import '../../_DB services/bloc/worker-cubit/wokers_profile_cubit.dart';
 import '../../_DB services/bloc/worker-cubit/wokers_profile_state.dart';
 
@@ -31,21 +30,19 @@ class _ProfileScreenState extends State<ProfileScreen>
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
 
-  bool isWorkerProfile = false; // Toggle between user and worker profiles
+  bool isEditable = false;
 
-  // Controllers for text fields
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _userContactController = TextEditingController();
   final TextEditingController _userAddressController = TextEditingController();
-  TextEditingController hourlyPriceController = TextEditingController();
 
-  // Dropdown category list and selected category
+  UserModel? userModel;
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 500),
       vsync: this,
     );
     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
@@ -63,16 +60,13 @@ class _ProfileScreenState extends State<ProfileScreen>
     ));
     getUserModel();
     getProfile();
-    // Initialize text field controllers
   }
 
   getProfile() async {
     String id = FirebaseAuth.instance.currentUser!.uid;
-    // context.read<WokersProfileCubit>().getProfileById(id);
     context.read<AuthCubit>().fetchUserProfile(id);
   }
 
-  UserModel? userModel;
   getUserModel() async {
     UserModel? _userModel = await SharedPrefAuth.getUser();
     setState(() {
@@ -80,118 +74,90 @@ class _ProfileScreenState extends State<ProfileScreen>
     });
   }
 
-  String userProfile = "";
-  bool profileExists = false;
-  bool isEditable = false;
-
   @override
   Widget build(BuildContext context) {
     if (userModel == null) {
       return Scaffold(
-        body: Center(child: CircularProgressIndicator()), // Loading indicator
+        body: Center(child: CircularProgressIndicator()),
       );
     }
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 0,
-        title: Text('Profile', style: TextStyle(fontWeight: FontWeight.bold)),
-        automaticallyImplyLeading: false,
+        title: Text('Profile',
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
         actions: [
-          SlideTransition(
-            position: _slideAnimation,
-            child: IconButton(
-              icon: Icon(
-                  (isEditable == true) ? Icons.edit : Icons.edit_off_rounded),
-              onPressed: () {
-                setState(() {
-                  isEditable = !isEditable;
-                });
-              },
-            ),
+          IconButton(
+            icon: Icon(isEditable ? Icons.edit_off : Icons.edit),
+            onPressed: () {
+              setState(() {
+                isEditable = !isEditable;
+              });
+            },
           ),
         ],
+        automaticallyImplyLeading: false,
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Toggle switch for user/worker profile
-            SizedBox(height: 10.h),
-            Center(
-              child: GestureDetector(
-                onTap: () {
-                  _animationController.forward().then((_) {
-                    Future.delayed(Duration(seconds: 1), () {
-                      _animationController.reverse();
-                    });
+            GestureDetector(
+              onTap: () {
+                _animationController.forward().then((_) {
+                  Future.delayed(Duration(seconds: 1), () {
+                    _animationController.reverse();
                   });
-                },
-                child: AnimatedBuilder(
-                  animation: _scaleAnimation,
-                  builder: (context, child) {
-                    return Transform.scale(
-                      scale: _scaleAnimation.value,
-                      child: Hero(
-                        tag: 'profilePic',
-                        child: AnimatedContainer(
-                          duration: Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          height: 130,
-                          width: 130,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Colors.blueAccent,
-                              width: 4.0,
+                });
+              },
+              child: AnimatedBuilder(
+                animation: _scaleAnimation,
+                builder: (context, child) {
+                  return Transform.scale(
+                    scale: _scaleAnimation.value,
+                    child: Hero(
+                      tag: 'profilePic',
+                      child: AnimatedContainer(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                        height: 130,
+                        width: 130,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border:
+                              Border.all(color: Colors.blueAccent, width: 4.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 10,
+                              offset: Offset(0, 3),
                             ),
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                  '${userModel!.profilePic}'), // Provide a default image, // Placeholder image
-                              fit: BoxFit.cover,
-                            ),
+                          ],
+                          image: DecorationImage(
+                            image: NetworkImage('${userModel!.profilePic}'),
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
             ),
-            SizedBox(height: 10.h),
-            Column(
-              children: [
-                buildUserProfileFields(),
-                SizedBox(
-                  height: 20.h,
-                ),
-                CustomButtonWidget(
-                  onPressed: () {},
-                  text: "Update",
-                )
-              ],
-            ),
             SizedBox(height: 20.h),
+            buildUserProfileFields(),
+            SizedBox(height: 20.h),
+            CustomButtonWidget(
+              onPressed: () {
+                // Update logic here
+              },
+              text: "Update",
+              buttonBackgroundColor: AppColors.appColor,
+            ),
           ],
         ),
       ),
-    );
-  }
-
-  void _showSuccessDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return CustomAnimatedDialog(
-          title: 'Profile Created',
-          message: 'Your worker profile has been created successfully!',
-          onConfirm: () {
-            // You can add any action here that needs to occur after confirming
-          },
-        );
-      },
     );
   }
 
@@ -202,40 +168,43 @@ class _ProfileScreenState extends State<ProfileScreen>
           UserModel user = state.user;
           _userNameController.text = user.name;
           _userContactController.text = user.phone;
-          _userAddressController.text = "user address";
-          userProfile = user.profilePic!;
+          _userAddressController.text = "user address"; // Adjust as needed
         }
         return Column(
           children: [
-            TextFormField(
-              controller: _userNameController,
-              decoration: InputDecoration(
-                labelText: "Username",
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-            ),
+            _buildTextField(_userNameController, "Username"),
             SizedBox(height: 10.h),
-            TextFormField(
-              controller: _userContactController,
-              decoration: InputDecoration(
-                labelText: 'Contact Info',
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-            ),
+            _buildTextField(_userContactController, "Contact Info"),
             SizedBox(height: 10.h),
-            TextFormField(
-              controller: _userAddressController,
-              decoration: InputDecoration(
-                labelText: 'Address',
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-            ),
+            _buildTextField(_userAddressController, "Address"),
           ],
         );
       },
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String label) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 5,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: TextFormField(
+        enabled: isEditable,
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+        ),
+      ),
     );
   }
 
@@ -245,7 +214,6 @@ class _ProfileScreenState extends State<ProfileScreen>
     _userNameController.dispose();
     _userContactController.dispose();
     _userAddressController.dispose();
-
     super.dispose();
   }
 }

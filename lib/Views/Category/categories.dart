@@ -23,11 +23,13 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: _buildTitle(),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            SizedBox(height: 10.h),
-            _buildTitle(),
             SizedBox(height: 10.h),
             _buildCategorySelector(),
             SizedBox(height: 10.h),

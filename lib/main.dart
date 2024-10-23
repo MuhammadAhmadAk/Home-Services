@@ -8,6 +8,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_services/Views/splash_screen.dart';
 import 'package:home_services/_DB%20services/bloc/Auth-Cubit/auth_cubit.dart';
 import 'package:home_services/_DB%20services/bloc/booking%20cubit/booking_cubit.dart';
+import 'package:home_services/_DB%20services/bloc/order_cubit/orders_cubit.dart';
+import 'package:home_services/_DB%20services/bloc/product%20cubit/products_cubit.dart';
 import 'package:home_services/firebase_options.dart';
 
 import '_DB services/bloc/worker-cubit/wokers_profile_cubit.dart';
@@ -34,6 +36,12 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => BookingCubit(),
+          ),
+          BlocProvider(
+            create: (context) => ProductsCubit(),
+          ),
+          BlocProvider(
+            create: (context) => OrdersCubit(),
           ),
         ],
         child: ScreenUtilInit(

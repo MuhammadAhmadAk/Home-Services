@@ -166,13 +166,14 @@ class WorkerProfilesRepo {
     }
   }
 
-// Function to get worker profiles by category
   Future<List<Map<String, dynamic>>> getWorkersByCategory(
-      String category) async {
+      String category, String currentUserId) async {
     try {
       // Query Firestore for worker profiles that match the given category
       QuerySnapshot querySnapshot = await _workerProfilesCollection
           .where('category', isEqualTo: category)
+          .where(FieldPath.documentId,
+              isNotEqualTo: currentUserId) // Exclude current user
           .get();
 
       // Convert query result into a list of maps
@@ -187,4 +188,26 @@ class WorkerProfilesRepo {
       rethrow;
     }
   }
+
+// Function to get worker profiles by category
+  // Future<List<Map<String, dynamic>>> getWorkersByCategory(
+  //     String category) async {
+  //   try {
+  //     // Query Firestore for worker profiles that match the given category
+  //     QuerySnapshot querySnapshot = await _workerProfilesCollection
+  //         .where('category', isEqualTo: category)
+  //         .get();
+
+  //     // Convert query result into a list of maps
+  //     List<Map<String, dynamic>> workers = querySnapshot.docs
+  //         .map((doc) => doc.data() as Map<String, dynamic>)
+  //         .toList();
+
+  //     print('Worker profiles fetched successfully for category: $category');
+  //     return workers;
+  //   } catch (e) {
+  //     print('Failed to fetch worker profiles by category: $e');
+  //     rethrow;
+  //   }
+  // }
 }

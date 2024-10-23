@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +22,7 @@ class ElectricServices extends StatefulWidget {
 
 class _ElectricServicesState extends State<ElectricServices>
     with SingleTickerProviderStateMixin {
-  List<Map<String, dynamic>> AllProfiles = [];
+  List<Map<String, dynamic>> electricProfiles = [];
 
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -50,20 +51,21 @@ class _ElectricServicesState extends State<ElectricServices>
   saveProfiles(List<Map<String, dynamic>> newProfiles) async {
     await SharedPrefWorkerProfiles.storeWorkerProfiles(newProfiles);
     setState(() {
-      AllProfiles = newProfiles;
+      electricProfiles = newProfiles;
     });
   }
 
   getProfiles() async {
+    String id = FirebaseAuth.instance.currentUser!.uid;
     List<Map<String, dynamic>>? savedProfiles =
         await SharedPrefWorkerProfiles.getWorkerProfiles();
     log("All saved profiles $savedProfiles");
     if (savedProfiles != null) {
       setState(() {
-        AllProfiles = savedProfiles;
+        electricProfiles = savedProfiles;
       });
     }
-    context.read<WokersProfileCubit>().getWorkerByCategory("Electrician");
+    context.read<WokersProfileCubit>().getWorkerByCategory("Electrician", id);
   }
 
   @override
@@ -80,62 +82,69 @@ class _ElectricServicesState extends State<ElectricServices>
               }
             },
             builder: (context, state) {
-              return ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: AllProfiles.length,
-                itemBuilder: (BuildContext context, int index) {
-                  // Staggered animation delay
-                  final delay = index * 100;
-                  return AnimatedBuilder(
-                    animation: _controller,
-                    builder: (context, child) {
-                      return FadeTransition(
-                        opacity: _fadeAnimation,
-                        child: SlideTransition(
-                          position: Tween<Offset>(
-                            begin: const Offset(0.0, 0.5),
-                            end: Offset.zero,
-                          ).animate(CurvedAnimation(
-                            parent: _controller,
-                            curve: Interval(0.1 * index, 1.0,
-                                curve: Curves.easeOut),
-                          )),
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: ScaleTransition(
-                              scale: _scaleAnimation,
-                              child: ServiceWidget(
-                                ontap: () {
-                                  Navigator.push(
-                                      context,
-                                      CupertinoPageRoute(
-                                        builder: (context) => DetailPage(
-                                          imgUrl: AllProfiles[index]
-                                                  ["profilePic"]
-                                              .toString(),
-                                          name: AllProfiles[index]["name"],
-                                          rating:
-                                              "${AllProfiles[index]["rating"]}",
-                                          price: AllProfiles[index]
-                                              ["hourlyPrice"],
-                                          allDetails: AllProfiles[index],
-                                        ),
-                                      ));
-                                },
-                                imgPath: AllProfiles[index]["profilePic"],
-                                name: AllProfiles[index]["name"],
-                                profession: AllProfiles[index]["category"],
-                                price: AllProfiles[index]["hourlyPrice"],
-                                ratting: "${AllProfiles[index]["rating"]}",
+              return (electricProfiles.isEmpty)
+                  ? Center(
+                      child: Text("No Wokers Avalible"),
+                    )
+                  : ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: electricProfiles.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        // Staggered animation delay
+                        final delay = index * 100;
+                        return AnimatedBuilder(
+                          animation: _controller,
+                          builder: (context, child) {
+                            return FadeTransition(
+                              opacity: _fadeAnimation,
+                              child: SlideTransition(
+                                position: Tween<Offset>(
+                                  begin: const Offset(0.0, 0.5),
+                                  end: Offset.zero,
+                                ).animate(CurvedAnimation(
+                                  parent: _controller,
+                                  curve: Interval(0.1 * index, 1.0,
+                                      curve: Curves.easeOut),
+                                )),
+                                child: GestureDetector(
+                                  onTap: () {},
+                                  child: ScaleTransition(
+                                    scale: _scaleAnimation,
+                                    child: ServiceWidget(
+                                      ontap: () {
+                                        Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                              builder: (context) => DetailPage(
+                                                imgUrl: electricProfiles[index]
+                                                        ["profilePic"]
+                                                    .toString(),
+                                                name: electricProfiles[index]
+                                                    ["name"],
+                                                rating:
+                                                    "${electricProfiles[index]["rating"]}",
+                                                price: electricProfiles[index]
+                                                    ["hourlyPrice"],
+                                                allDetails: electricProfiles[index],
+                                              ),
+                                            ));
+                                      },
+                                      imgPath: electricProfiles[index]["profilePic"],
+                                      name: electricProfiles[index]["name"],
+                                      profession: electricProfiles[index]
+                                          ["category"],
+                                      price: electricProfiles[index]["hourlyPrice"],
+                                      ratting:
+                                          "${electricProfiles[index]["rating"]}",
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-              );
+                            );
+                          },
+                        );
+                      },
+                    );
             },
           );
         },

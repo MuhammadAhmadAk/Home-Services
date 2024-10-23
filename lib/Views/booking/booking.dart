@@ -68,7 +68,6 @@ class _BookingScreenState extends State<BookingScreen> {
                     itemCount: _bookings.length,
                     itemBuilder: (context, index) {
                       final booking = _bookings[index];
-
                       return WorkerCard(
                         onPayNowTap: () {},
                         isAvailable: booking['isAvailable'],

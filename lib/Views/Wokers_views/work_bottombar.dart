@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:home_services/Utils/constants/colors.dart';
 import 'package:home_services/Views/Category/categories.dart';
 import 'package:home_services/Views/Wokers_views/booking_request.dart';
+import 'package:home_services/Views/Wokers_views/home/chatbot_screen.dart';
 import 'package:home_services/Views/Wokers_views/home/worker_home.dart';
 import 'package:home_services/Views/Wokers_views/w_profile.dart';
 import 'package:home_services/Views/home/home_screen.dart';
@@ -37,7 +38,7 @@ class _WorkerCustomNavbarState extends State<WorkerCustomNavbar> {
       _widgetOptions = [
         WorkerHomeScreen(),
         BookingRequests(),
-        Text("Booking Request"),
+        ChatbotScreen(),
         WorkerProfileScreen(),
       ];
     });
@@ -86,8 +87,8 @@ class _WorkerCustomNavbarState extends State<WorkerCustomNavbar> {
               icon: Icons.work,
             ),
             CustomBottomBarItems(
-              label: 'Shop',
-              icon: Icons.store_mall_directory,
+              label: 'Chat Bot',
+              icon: Icons.chat,
             ),
             CustomBottomBarItems(
               label: 'Profile',

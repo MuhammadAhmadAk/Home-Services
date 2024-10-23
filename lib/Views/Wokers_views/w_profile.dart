@@ -44,6 +44,7 @@ class _WorkerProfileScreenState extends State<WorkerProfileScreen>
   final TextEditingController _workerBioController = TextEditingController();
   final TextEditingController _workerExperienceController =
       TextEditingController();
+  String? _selectedCategory = 'Painting'; // Default selected category
 
   // Dropdown category list and selected category
   List<String> _workerCategories = [
@@ -53,8 +54,7 @@ class _WorkerProfileScreenState extends State<WorkerProfileScreen>
     'Painter',
     'Mechanic'
   ];
-  String? _selectedCategory; // Variable to store the selected category
-
+  final List<String> uniqueCategories = []; // Convert to Set and back to List
   @override
   void initState() {
     super.initState();
@@ -75,6 +75,7 @@ class _WorkerProfileScreenState extends State<WorkerProfileScreen>
       parent: _animationController,
       curve: Curves.easeInOut,
     ));
+    uniqueCategories == _workerCategories.toSet().toList();
     getUserData();
     getProfile();
     // Initialize text field controllers
@@ -275,6 +276,7 @@ class _WorkerProfileScreenState extends State<WorkerProfileScreen>
             _workerExperienceController.text = profileData["experience"] ?? '';
             _workerBioController.text = profileData["bio"] ?? '';
             _selectedCategory = profileData["category"] ?? '';
+            hourlyPriceController.text = profileData["hourlyPrice"] ?? "";
           }
         }
 
@@ -299,7 +301,7 @@ class _WorkerProfileScreenState extends State<WorkerProfileScreen>
                     OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               ),
               value: _selectedCategory,
-              items: _workerCategories.map((String category) {
+              items: uniqueCategories.map((String category) {
                 return DropdownMenuItem<String>(
                   value: category,
                   child: Text(category),

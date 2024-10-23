@@ -1,15 +1,13 @@
 import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:home_services/Views/Wokers_views/components/booking_card.dart';
+import 'package:home_services/Views/Wokers_views/home/view_customer_loc.dart';
 import 'package:home_services/_DB%20services/SharedPref%20services/shared_pref_worker_booking.dart';
 import 'package:home_services/_DB%20services/bloc/booking%20cubit/booking_cubit.dart';
-
 import '../../_DB services/Repositories/booking_repo.dart';
 import '../../_DB services/bloc/booking cubit/booking_state.dart';
-import '../booking/worker_card.dart';
 
 class BookingRequests extends StatefulWidget {
   const BookingRequests({super.key});
@@ -20,7 +18,7 @@ class BookingRequests extends StatefulWidget {
 
 class _BookingRequestsState extends State<BookingRequests> {
   List<Map<String, dynamic>> _bookings = [];
-  BookingRepository bookingRepository = new BookingRepository();
+  BookingRepository bookingRepository = BookingRepository();
 
   @override
   void initState() {
@@ -29,23 +27,41 @@ class _BookingRequestsState extends State<BookingRequests> {
   }
 
   Future<void> _fetchBookings() async {
-    List<Map<String, dynamic>> savedbookings =
+    List<Map<String, dynamic>> savedBookings =
         await SharedprefWokerBookings.getWorkerBooking();
     String id = FirebaseAuth.instance.currentUser!.uid;
 
-    if (savedbookings.isNotEmpty) {
+    if (savedBookings.isNotEmpty) {
       setState(() {
-        _bookings = savedbookings;
+        _bookings = savedBookings;
       });
     }
     context.read<BookingCubit>().getAllWorkerBooking(id);
   }
 
-  saveBookings(List<Map<String, dynamic>> bookings) async {
+  Future<void> saveBookings(List<Map<String, dynamic>> bookings) async {
     await SharedprefWokerBookings.storeWorkerBooking(bookings);
     setState(() {
       _bookings = bookings;
     });
+  }
+
+  void _showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Row(
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(width: 20),
+              Text("Approving..."),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -60,7 +76,6 @@ class _BookingRequestsState extends State<BookingRequests> {
         listener: (context, state) {
           log("${state}");
           if (state is BookingFetchingState) {
-            // log("${state.bookings}");
             saveBookings(state.bookings);
           }
         },
@@ -73,19 +88,30 @@ class _BookingRequestsState extends State<BookingRequests> {
                     itemCount: _bookings.length,
                     itemBuilder: (context, index) {
                       final booking = _bookings[index];
-                      log("Booking: ${booking["bookingId"]}");
+                      log("Booking: ${booking}");
 
-                      return (booking["isAvailable"] == false)
-                          ? BookingCard(
-                              bookingData: booking,
-                              onApprove: () async {
-                                await bookingRepository
-                                    .updateAvailabilityStatus(
-                                        bookingId: booking["bookingId"],
-                                        isAvailable: true);
-                              },
-                            )
-                          : Container();
+                      return BookingCard(
+                        bookingData: booking,
+                        onAddressView: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ViewCustomer(
+                                targetLat: booking["locations"]["lat"],
+                                targetLng: booking["locations"]["lng"],
+                              ),
+                            ),
+                          );
+                        },
+                        onApprove: () async {
+                          _showLoadingDialog(context); // Show loading dialog
+                          await bookingRepository.updateAvailabilityStatus(
+                            bookingId: booking["bookingId"],
+                            isAvailable: true,
+                          );
+                          Navigator.of(context)
+                              .pop(); // Dismiss the loading dialog
+                        },
+                      );
                     },
                   ),
           );

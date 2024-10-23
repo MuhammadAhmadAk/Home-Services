@@ -30,7 +30,7 @@ class ProductCard extends StatelessWidget {
           children: [
             Expanded(
               child: Image.network(
-                product["image"],
+                product["imageUrl"],
                 fit: BoxFit.cover,
               ),
             ),
@@ -41,7 +41,7 @@ class ProductCard extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             Text(
-              product["brand"],
+              product["category"],
               style: GoogleFonts.poppins(color: Colors.black54),
             ),
             Text(

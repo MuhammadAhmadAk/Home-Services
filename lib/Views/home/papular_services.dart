@@ -1,29 +1,27 @@
 import 'dart:developer';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:home_services/Utils/Components/service_widget.dart';
-import 'package:home_services/Utils/constants/assets.dart';
-import 'package:home_services/Views/Category/Pages/detailspage.dart';
-import 'package:home_services/_DB%20services/SharedPref%20services/shared_pref_workers_profiles.dart';
-import 'package:home_services/_DB%20services/bloc/worker-cubit/wokers_profile_state.dart';
 
-import '../../../Utils/constants/colors.dart';
-import '../../../_DB services/bloc/worker-cubit/wokers_profile_cubit.dart';
-import 'carpentory_pages.dart';
+import '../../Utils/Components/service_widget.dart';
+import '../../_DB services/SharedPref services/shared_pref_workers_profiles.dart';
+import '../../_DB services/bloc/worker-cubit/wokers_profile_cubit.dart';
+import '../../_DB services/bloc/worker-cubit/wokers_profile_state.dart';
+import '../Category/Pages/detailspage.dart';
 
-class CleaningServices extends StatefulWidget {
-  const CleaningServices({super.key});
+class PapularServices extends StatefulWidget {
+  const PapularServices({
+    super.key,
+  });
 
   @override
-  State<CleaningServices> createState() => _CleaningServicesState();
+  State<PapularServices> createState() => _PapularServicesState();
 }
 
-class _CleaningServicesState extends State<CleaningServices>
+class _PapularServicesState extends State<PapularServices>
     with SingleTickerProviderStateMixin {
-  List<Map<String, dynamic>> cleaningProfiles = [];
+  List<Map<String, dynamic>> AllProfiles = [];
 
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -52,21 +50,20 @@ class _CleaningServicesState extends State<CleaningServices>
   saveProfiles(List<Map<String, dynamic>> newProfiles) async {
     await SharedPrefWorkerProfiles.storeWorkerProfiles(newProfiles);
     setState(() {
-      cleaningProfiles = newProfiles;
+      AllProfiles = newProfiles;
     });
   }
 
   getProfiles() async {
-    String id = FirebaseAuth.instance.currentUser!.uid;
     List<Map<String, dynamic>>? savedProfiles =
         await SharedPrefWorkerProfiles.getWorkerProfiles();
     log("All saved profiles $savedProfiles");
     if (savedProfiles != null) {
       setState(() {
-        cleaningProfiles = savedProfiles;
+        AllProfiles = savedProfiles;
       });
     }
-    context.read<WokersProfileCubit>().getWorkerByCategory("Cleaning", id);
+    context.read<WokersProfileCubit>().getAllProfiles();
   }
 
   @override
@@ -83,13 +80,14 @@ class _CleaningServicesState extends State<CleaningServices>
               }
             },
             builder: (context, state) {
-              return (cleaningProfiles.isEmpty)
+              return (AllProfiles.isEmpty)
                   ? Center(
                       child: Text("No Wokers Avalible"),
                     )
                   : ListView.builder(
+                      shrinkWrap: true,
                       physics: const BouncingScrollPhysics(),
-                      itemCount: cleaningProfiles.length,
+                      itemCount: AllProfiles.length,
                       itemBuilder: (BuildContext context, int index) {
                         // Staggered animation delay
                         final delay = index * 100;
@@ -117,26 +115,26 @@ class _CleaningServicesState extends State<CleaningServices>
                                             context,
                                             CupertinoPageRoute(
                                               builder: (context) => DetailPage(
-                                                imgUrl: cleaningProfiles[index]
+                                                imgUrl: AllProfiles[index]
                                                         ["profilePic"]
                                                     .toString(),
-                                                name: cleaningProfiles[index]
+                                                name: AllProfiles[index]
                                                     ["name"],
                                                 rating:
-                                                    "${cleaningProfiles[index]["rating"]}",
-                                                price: cleaningProfiles[index]
+                                                    "${AllProfiles[index]["rating"]}",
+                                                price: AllProfiles[index]
                                                     ["hourlyPrice"],
-                                                allDetails: cleaningProfiles[index],
+                                                allDetails: AllProfiles[index],
                                               ),
                                             ));
                                       },
-                                      imgPath: cleaningProfiles[index]["profilePic"],
-                                      name: cleaningProfiles[index]["name"],
-                                      profession: cleaningProfiles[index]
+                                      imgPath: AllProfiles[index]["profilePic"],
+                                      name: AllProfiles[index]["name"],
+                                      profession: AllProfiles[index]
                                           ["category"],
-                                      price: cleaningProfiles[index]["hourlyPrice"],
+                                      price: AllProfiles[index]["hourlyPrice"],
                                       ratting:
-                                          "${cleaningProfiles[index]["rating"]}",
+                                          "${AllProfiles[index]["rating"]}",
                                     ),
                                   ),
                                 ),

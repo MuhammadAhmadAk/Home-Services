@@ -80,10 +80,11 @@ class WokersProfileCubit extends Cubit<WokersProfileState> {
     }
   }
 
-  Future<void> getWorkerByCategory(String Category) async {
+  Future<void> getWorkerByCategory(String Category, String userID) async {
     emit(WokersProfileLoading());
     try {
-      var profiles = await workerProfilesRepo.getWorkersByCategory(Category);
+      var profiles =
+          await workerProfilesRepo.getWorkersByCategory(Category, userID);
       emit(WokersAllProfileProfileFetchState(wokersProfile: profiles));
     } on Exception catch (e) {
       emit(WorkerProfileErrorState(errorMessage: e.toString()));
