@@ -13,13 +13,11 @@ class SingleOrderCheckoutPage extends StatefulWidget {
   final String itemName;
   final double itemPrice;
   final String itemImage; // Added image parameter
-  final String productId;
 
   SingleOrderCheckoutPage({
     required this.itemName,
     required this.itemPrice,
     required this.itemImage,
-    required this.productId, // Initialize image in the constructor
   });
 
   @override
@@ -87,7 +85,6 @@ class _SingleOrderCheckoutPageState extends State<SingleOrderCheckoutPage>
       return;
     }
     Map<String, dynamic> data = {
-      'productId': widget.productId,
       'itemName': widget.itemName,
       'itemPrice': widget.itemPrice,
       'quantity': _quantity,
@@ -100,7 +97,7 @@ class _SingleOrderCheckoutPageState extends State<SingleOrderCheckoutPage>
       context.read<OrdersCubit>().createOrder(
           orderId: generateRandomTenDigitNumber(),
           userId: userId,
-          productId: widget.productId,
+          productId: "${generateRandomTenDigitNumber()}_122",
           quantity: _quantity,
           price: widget.itemPrice,
           shippingAddress: _shippingAddress,

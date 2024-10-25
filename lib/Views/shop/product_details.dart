@@ -161,7 +161,15 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                               onPressed: () {
                                 // Navigate to checkout page with product details
                                 // Navigate.push(context, ...);
-                                log("$product");
+
+                                Map<String, dynamic> prd = {
+                                  'id': product['id'],
+                                  'name': product['name'],
+                                  'price': product['price'],
+                                  'imageUrl': product['imageUrl'],
+                                  'quantity':
+                                      1, // Placeholder value, replace with actual quantity selected by user
+                                };
                                 Navigator.push(
                                     context,
                                     CupertinoDialogRoute(
@@ -171,7 +179,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                                               itemPrice: double.parse(
                                                   product['price']),
                                               itemImage: product['imageUrl'],
-                                              productId: product['id'],
                                             ),
                                         context: context));
                               },

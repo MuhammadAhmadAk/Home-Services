@@ -54,9 +54,10 @@ class _WorkerProfileScreenState extends State<WorkerProfileScreen>
     'Painter',
     'Mechanic'
   ];
-  final List<String> uniqueCategories = []; // Convert to Set and back to List
+
   @override
   void initState() {
+    _workerCategories = _workerCategories.toSet().toList();
     super.initState();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -75,7 +76,6 @@ class _WorkerProfileScreenState extends State<WorkerProfileScreen>
       parent: _animationController,
       curve: Curves.easeInOut,
     ));
-    uniqueCategories == _workerCategories.toSet().toList();
     getUserData();
     getProfile();
     // Initialize text field controllers
@@ -300,18 +300,22 @@ class _WorkerProfileScreenState extends State<WorkerProfileScreen>
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              value: _selectedCategory,
-              items: uniqueCategories.map((String category) {
+              value: _workerCategories.contains(_selectedCategory)
+                  ? _selectedCategory
+                  : null,
+              items: _workerCategories.map((String category) {
                 return DropdownMenuItem<String>(
                   value: category,
                   child: Text(category),
                 );
               }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  _selectedCategory = newValue; // Update the selected category
-                });
-              },
+              onChanged: isEditable
+                  ? (newValue) {
+                      setState(() {
+                        _selectedCategory = newValue;
+                      });
+                    }
+                  : null,
             ),
             SizedBox(height: 10.h),
             TextFormField(

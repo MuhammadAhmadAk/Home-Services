@@ -92,39 +92,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   controller: passwordController,
                   hintText: "Password",
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Row(
-                      children: [
-                        Radio(
-                          value: 1,
-                          groupValue: selectedValue,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedValue = value as int;
-                            });
-                          },
-                        ),
-                        Text("User")
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Radio(
-                          value: 2,
-                          groupValue: selectedValue,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedValue = value as int;
-                            });
-                          },
-                        ),
-                        Text("Worker")
-                      ],
-                    )
-                  ],
-                ),
                 SizedBox(
                   height: 20.h,
                 ),
@@ -137,18 +104,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           passwordController.text.isEmpty) {
                         showMessage(context, "Error", "Please the all Fields");
                       } else {
-                        if (selectedValue == 0) {
-                          showMessage(
-                              context, "Error", "Please select a role.");
-                          return;
-                        }
                         await context.read<AuthCubit>().registerUser(
-                              nameController.text,
-                              emailController.text,
-                              phoneController.text,
-                              passwordController.text,
-                              selectedValue == 1 ? "User" : "Worker",
-                            );
+                            nameController.text,
+                            emailController.text,
+                            phoneController.text,
+                            passwordController.text,
+                            "User");
                       }
                     }),
                 SizedBox(
